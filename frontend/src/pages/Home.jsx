@@ -1,16 +1,17 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Optional if you're handling navigation
-
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logos/company.jpg'; 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
     <div className="bg-white min-h-screen flex flex-col">
-      
       {/* Header */}
-      <header className="bg-blue-600 text-white py-4 shadow">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">MyApp</h1>
+      <header className="bg-white shadow py-4">
+        <div className="max-w-7xl mx-auto px-4 flex items-center">
+          {/* Logo and App Name */}
+          <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
+          <h1 className="text-2xl font-bold text-blue-600">MyApp</h1>
         </div>
       </header>
 
@@ -20,7 +21,7 @@ const Home = () => {
         <p className="text-gray-600 text-lg mb-6 max-w-xl">
           Build modern applications fast with React and Tailwind CSS.
         </p>
-        
+
         {/* Centered Buttons */}
         <div className="flex space-x-4 mt-4">
           <button

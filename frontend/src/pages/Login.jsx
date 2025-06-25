@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +21,8 @@ const Login = () => {
     e.preventDefault();
     console.log('Login data:', formData);
     // Add your API login logic here
+    // If login is successful, redirect
+    navigate('/dashboard'); // 👈 Redirect after login
   };
 
   return (
