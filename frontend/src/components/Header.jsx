@@ -1,14 +1,29 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import companyLogo from '../assets/logos/company.jpg';
+import companyLogo from '../assets/logos/logo.png';
 import userProfile from '../assets/logos/user.jpg';
+import { logoutUser } from '../redux/auth/authSlice';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Header = () => {
-  const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    navigate('/login');
+   const { user } = useSelector((state) => state.auth);
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser());
+      toast.success("Logout successful");
+      if (user?.role === 'admin') {
+        navigate('/login');
+      } else {
+        navigate('/');
+      }
+    } catch {
+      toast.error("Failed to logout");
+    }
   };
 
   return (
@@ -16,7 +31,7 @@ const Header = () => {
       {/* Company Logo */}
       <div className="flex items-center space-x-2">
         <img src={companyLogo} alt="Logo" className="h-10 w-10 object-contain" />
-        <span className="font-bold text-xl text-blue-700">MyBrand</span>
+        <span className="font-bold text-xl text-blue-700">Yourkart</span>
       </div>
 
       {/* User Info */}

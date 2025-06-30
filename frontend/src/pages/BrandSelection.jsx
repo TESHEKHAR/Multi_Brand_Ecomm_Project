@@ -22,18 +22,18 @@ const BrandSelection = () => {
     <div className="min-h-screen bg-gray-100">
       <Header />
 
-      <div className="flex items-center justify-center p-60">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-4xl w-full">
+      <div className="flex items-center justify-center px-4 py-8 md:py-16">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl w-full">
           {brands.map((brand) => (
             <div
               key={brand.name}
               onClick={() => handleBrandClick(brand.name)}
-              className="cursor-pointer bg-white p-6 rounded-xl shadow hover:shadow-lg transition flex items-center justify-center"
+              className="cursor-pointer bg-white p-4 sm:p-6 rounded-xl shadow hover:shadow-lg transition flex items-center justify-center"
             >
               <img
                 src={brand.logo}
                 alt={brand.name}
-                className="h-24 object-contain"
+                className="h-16 md:h-24 object-contain"
               />
             </div>
           ))}

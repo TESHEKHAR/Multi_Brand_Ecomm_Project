@@ -1,12 +1,17 @@
+import axios from '../api/axiosInstance';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    company: '',
+    companyName: '',
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,14 +21,28 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // You can connect to an API here
+    try {
+      await axios.post('/register', formData);
+
+      toast.success(
+        'Thank you for registering. Your request is under review. You will receive an email once approved.'
+      );
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
+    } catch (error) {
+      console.error('Registration failed:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || 'Registration failed');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 bg-cover bg-center relative"
+    style={{
+      backgroundImage: `url(${require('../assets/logos/login_register_bck.jpg')})`,
+    }}>
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,9 +98,9 @@ const Register = () => {
             </label>
             <input
               type="text"
-              name="company"
+              name="companyName"
               id="company"
-              value={formData.company}
+              value={formData.companyName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
