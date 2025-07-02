@@ -32,7 +32,7 @@ const Login = () => {
         const role = resultAction.payload?.user?.role;
         toast.success("Login successful!");
         if (role === "admin"){
-          navigate('/admin/dashboard');
+          navigate('/admin');
         } else {
           navigate('/dashboard');
         }
