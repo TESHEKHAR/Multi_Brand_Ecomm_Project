@@ -321,7 +321,7 @@ export const setPassword = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    user.password = newPassword; // Will be hashed by pre-save hook
+    user.password = newPassword;
     user.resetToken = undefined;
     user.tokenExpires = undefined;
 
