@@ -96,39 +96,6 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// export const updateProduct = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const updatedData = req.body;
-//     const product = await Product.findById(id);
-
-//     if (!product) {
-//       return res.status(404).json({ message: 'Product not found' });
-//     }
-
-//     if (req.file) {
-//       if (product.productImage) {
-//         const oldImagePath = product.productImage.replace(`${req.protocol}://${req.get('host')}/uploads/`, '');
-//         const fullOldImagePath = path.join(process.cwd(), 'uploads', oldImagePath);
-
-//         if (fs.existsSync(fullOldImagePath)) {
-//           try {
-//             fs.unlinkSync(fullOldImagePath);
-//             console.log('Old image deleted successfully');
-//           } catch (unlinkError) {
-//             console.error(`Failed to delete old image: ${unlinkError.message}`);
-//           }
-//         }
-//       }
-//       updatedData.productImage = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-//     }
-//     const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, { new: true });
-//     res.status(200).json({ message: 'Product updated successfully', updatedProduct });
-//   } catch (error) {
-//     res.status(400).json({ message: 'Error updating product', error: error.message });
-//   }
-// };
-
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
