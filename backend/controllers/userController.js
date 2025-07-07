@@ -237,13 +237,34 @@ export const approvalUserAndSendLink = async (req, res) => {
 
     const link = `http://localhost:3000/set-password?token=${token}&id=${user._id}`;
 
+    // await sendEmail(
+    //   user.email,
+    //   "Your account has approved - Set your password",
+    //   `<p>Dear ${user.name},<br/>Your account has been approved.<br/>
+    //   Please click the link below to set your password:</br>
+    //   <a href="${link}">Set Password</a></p>`
+    // );
     await sendEmail(
       user.email,
-      "Your account has approved - Set your password",
-      `<p>Dear ${user.name},<br/>Your account has been approved.<br/>
-      Please click the link below to set your password:</br>
-      <a href="${link}">Set Password</a></p>`
+      "Your account has been approved - Set your password",
+      `<p>Dear ${user.name},</p>
+       <p>Your account has been approved.</p>
+       <p>Please click the button below to set your password:</p>
+       <a href="${link}" style="
+         display: inline-block;
+         padding: 10px 20px;
+         background-color: #4CAF50;
+         color: white;
+         text-decoration: none;
+         border-radius: 5px;
+         font-weight: bold;
+       ">
+         Set Password
+       </a>
+       <p>If the button doesn't work, copy and paste this link into your browser:</p>
+       <p>${link}</p>`
     );
+    
 
     return res.status(200).json({ message: "User approved and email sent" });
   } catch (error) {
