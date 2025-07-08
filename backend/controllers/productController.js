@@ -74,14 +74,28 @@ export const createProduct = async (req, res) => {
   }
 };
 
+// export const getProducts = async (req, res) => {
+//   try {
+//     const products = await Product.find().populate('category');
+//     res.status(200).json(products);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching products', error: error.message });
+//   }
+// };
+
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate('category');
+    const products = await Product.find()
+      .populate('category', 'name')
+      .populate('subCategory', 'name');
+
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products', error: error.message });
   }
 };
+
+
 
 export const getProductById = async (req, res) => {
   try {
@@ -147,8 +161,6 @@ export const updateProduct = async (req, res) => {
       reviews: reviews ? parseInt(reviews) : product.reviews,
       status
     };
-
-    // ✅ Handle image upload
     if (req.file) {
       if (product.productImage) {
         const oldImagePath = product.productImage.replace(`${req.protocol}://${req.get('host')}/uploads/`, '');
