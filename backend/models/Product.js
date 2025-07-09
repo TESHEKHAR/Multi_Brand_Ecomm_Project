@@ -32,12 +32,15 @@ const productSchema = new mongoose.Schema({
   productImage: {
     type: String,
   },
-  price: {
+  listPrice: {
     type: Number
   },
-  discount: {
+  discountPrice: {
     type: Number,
     default: 0,
+  },
+  weight: {
+    type: Number
   },
   stock: {
     type: Number,

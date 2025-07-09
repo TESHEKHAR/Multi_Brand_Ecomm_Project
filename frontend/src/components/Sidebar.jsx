@@ -28,6 +28,16 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
+          to="/admin/brand"
+          className={({ isActive }) =>
+            `${linkClass} ${isActive ? activeClass : 'text-gray-300'}`
+          }
+        >
+          <FaBox />
+          Brand
+        </NavLink>
+
+        <NavLink
           to="/admin/products"
           className={({ isActive }) =>
             `${linkClass} ${isActive ? activeClass : 'text-gray-300'}`
