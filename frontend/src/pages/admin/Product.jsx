@@ -24,6 +24,8 @@ import {
   updateProduct,
   deleteProduct,
 } from "../../redux/product/productSlice";
+import { getBrands } from "../../redux/brand/brandSlice";
+import { getCategories } from "../../redux/category/categorySlice";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 
@@ -32,6 +34,8 @@ const { Option } = Select;
 const Product = () => {
   const dispatch = useDispatch();
   const { products, loading } = useSelector((state) => state.product);
+  const { brands } = useSelector((state) => state.brand);
+  const { categories } = useSelector((state) => state.category);
 
   const [form] = Form.useForm();
   const [showModal, setShowModal] = useState(false);
@@ -41,6 +45,8 @@ const Product = () => {
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getBrands());
+    dispatch(getCategories());
   }, [dispatch]);
 
   const openModal = (product = null) => {
@@ -58,6 +64,8 @@ const Product = () => {
         discountPrice: product.discountPrice,
         weight: product.weight,
         status: product.status,
+        brand: product.brand?._id,
+        category: product.category?._id,
       });
       setPreviewImage(product.productImage || null);
     } else {
@@ -101,6 +109,8 @@ const Product = () => {
       formData.append("discountPrice", parseFloat(values.discountPrice));
       formData.append("weight", parseFloat(values.weight));
       formData.append("status", values.status);
+      formData.append("brand", values.brand);
+      formData.append("category", values.category);
 
       if (fileList[0]?.originFileObj) {
         formData.append("productImage", fileList[0].originFileObj);
@@ -149,10 +159,6 @@ const Product = () => {
     {
       title: "Weight (KG)",
       dataIndex: "weight",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
     },
     {
       title: "Image",
@@ -233,12 +239,11 @@ const Product = () => {
               label="Product Name"
               name="name"
               rules={[{ required: true, message: "Please enter product name" }]}
-              className="col-span-1"
             >
               <Input placeholder="Enter product name" onChange={handleNameChange} />
             </Form.Item>
 
-            <Form.Item label="Slug" name="slug" className="col-span-1">
+            <Form.Item label="Slug" name="slug">
               <Input disabled />
             </Form.Item>
           </div>
@@ -274,6 +279,24 @@ const Product = () => {
               <Select>
                 <Option value="active">Active</Option>
                 <Option value="inactive">Inactive</Option>
+              </Select>
+            </Form.Item>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
+              <Select placeholder="Select Brand">
+                {brands?.map((b) => (
+                  <Option key={b._id} value={b._id}>{b.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Category" name="category" rules={[{ required: true }]}>
+              <Select placeholder="Select Category">
+                {categories?.map((c) => (
+                  <Option key={c._id} value={c._id}>{c.name}</Option>
+                ))}
               </Select>
             </Form.Item>
           </div>

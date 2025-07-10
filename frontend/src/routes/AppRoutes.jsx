@@ -271,6 +271,7 @@ import SetPassword from "../pages/SetPassword";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Brand from "../pages/admin/Brand";
+import Category from "../pages/admin/Category";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -330,6 +331,7 @@ const AppRoutes = () => {
           <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
           <Route path="/admin/products" element={<AdminLayout><Product /></AdminLayout>} />
           <Route path="/admin/brand" element={<AdminLayout><Brand /></AdminLayout>} />
+          <Route path="/admin/category" element={<AdminLayout><Category /></AdminLayout>} />
         </Route>
       </Routes>
     </BrowserRouter>
