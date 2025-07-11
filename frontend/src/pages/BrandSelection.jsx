@@ -44,9 +44,9 @@ const BrandSelection = () => {
                     className="h-16 md:h-20 object-contain mb-2"
                   />
                 )}
-                <p className="text-xs sm:text-sm font-medium text-gray-700 truncate w-full">
+                {/* <p className="text-xs sm:text-sm font-medium text-gray-700 truncate w-full">
                   {brand.name}
-                </p>
+                </p> */}
               </div>
             ))
           )}

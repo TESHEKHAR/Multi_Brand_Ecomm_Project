@@ -11,6 +11,20 @@ export const getProducts = createAsyncThunk('product/getProducts', async (_, thu
   }
 });
 
+export const getProductsByBrand = createAsyncThunk(
+  'product/getProductsByBrand',
+  async (brandName, thunkAPI) => {
+    try {
+      const res = await axios.get(`/brand/${brandName}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error fetching brand products'
+      );
+    }
+  }
+);
+
 // CREATE product
 export const createProduct = createAsyncThunk('product/createProduct', async (formData, thunkAPI) => {
   try {
@@ -49,6 +63,7 @@ const productSlice = createSlice({
   name: 'product',
   initialState: {
     products: [],
+    brandProducts: [],
     loading: false,
     error: null,
   },
@@ -65,6 +80,19 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(getProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+       // GET BRAND PRODUCTS
+       .addCase(getProductsByBrand.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductsByBrand.fulfilled, (state, action) => {
+        state.loading = false;
+        state.brandProducts = action.payload;
+      })
+      .addCase(getProductsByBrand.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
