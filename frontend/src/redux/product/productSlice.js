@@ -10,6 +10,19 @@ export const getProducts = createAsyncThunk('product/getProducts', async (_, thu
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error fetching products');
   }
 });
+export const getProductDetails = createAsyncThunk(
+  'product/getProductDetails',
+  async (productId, thunkAPI) => {
+    try {
+      const res = await axios.get(`/product/${productId}`);
+      return res.data; // Assuming res.data is the product object
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error fetching product details'
+      );
+    }
+  }
+);
 
 export const getProductsByBrand = createAsyncThunk(
   'product/getProductsByBrand',

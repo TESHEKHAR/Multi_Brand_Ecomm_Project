@@ -272,6 +272,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Brand from "../pages/admin/Brand";
 import Category from "../pages/admin/Category";
+import ProductDetails from "../pages/ProductDetails";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -320,6 +321,8 @@ const AppRoutes = () => {
           {/* User's primary dashboard */}
           <Route path="/dashboard" element={<BrandSelection />} />
           <Route path="/brand/:brandName" element={<BrandProducts />} />
+          <Route path="/product/:productId" element={<ProductDetails />} />
+
         </Route>
 
         {/* Admin-specific Protected Routes */}

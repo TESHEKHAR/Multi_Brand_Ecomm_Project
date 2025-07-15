@@ -85,10 +85,16 @@ const BrandProducts = () => {
                       </p>
                     )}
                   </div>
+<Link
+  to={`/product/${product._id}`}
+  state={{ product }}
+>
+  <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+    View Details
+  </button>
+</Link>
 
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                    View Details
-                  </button>
+
                 </div>
               </div>
             ))}
