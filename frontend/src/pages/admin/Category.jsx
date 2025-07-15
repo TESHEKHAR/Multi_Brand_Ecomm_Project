@@ -7,6 +7,7 @@ import {
   Modal,
   Popconfirm,
   Space,
+  Select,
 } from "antd";
 import {
   PlusOutlined,
@@ -20,11 +21,15 @@ import {
   updateCategory,
   deleteCategory,
 } from "../../redux/category/categorySlice";
+import { getBrands } from "../../redux/brand/brandSlice";
 import { toast } from "react-toastify";
+
+const { Option } = Select;
 
 const Category = () => {
   const dispatch = useDispatch();
   const { categories, loading } = useSelector((state) => state.category);
+  const { brands } = useSelector((state) => state.brand);
 
   const [form] = Form.useForm();
   const [showModal, setShowModal] = useState(false);
@@ -32,13 +37,17 @@ const Category = () => {
 
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getBrands());
   }, [dispatch]);
 
   const openModal = (category = null) => {
     form.resetFields();
     if (category) {
       setEditId(category._id);
-      form.setFieldsValue({ name: category.name });
+      form.setFieldsValue({
+        name: category.name,
+        brand: category.brand?._id || undefined,
+      });
     } else {
       setEditId(null);
     }
@@ -54,12 +63,16 @@ const Category = () => {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const formData = {
+        name: values.name,
+        brand: values.brand,
+      };
 
       if (editId) {
-        await dispatch(updateCategory({ id: editId, formData: { name: values.name } })).unwrap();
+        await dispatch(updateCategory({ id: editId, formData })).unwrap();
         toast.success("Category updated successfully");
       } else {
-        await dispatch(createCategory({ name: values.name })).unwrap();
+        await dispatch(createCategory(formData)).unwrap();
         toast.success("Category created successfully");
       }
 
@@ -82,8 +95,13 @@ const Category = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Category Name",
       dataIndex: "name",
+    },
+    {
+      title: "Brand",
+      dataIndex: ["brand", "name"],
+      render: (brandName) => brandName || "N/A",
     },
     {
       title: "Actions",
@@ -142,6 +160,16 @@ const Category = () => {
             rules={[{ required: true, message: "Please enter a name" }]}
           >
             <Input placeholder="Enter category name" />
+          </Form.Item>
+
+          <Form.Item label="Brand" name="brand">
+            <Select placeholder="Select a brand" allowClear>
+              {brands.map((b) => (
+                <Option key={b._id} value={b._id}>
+                  {b.name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

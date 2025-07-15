@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logos/logo.png';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,12 +18,12 @@ const Home = () => {
       <div className="relative z-10 flex flex-col min-h-screen">
 
         {/* Header */}
-        <header className="bg-white/90 shadow py-4">
+        {/* <header className="bg-white/90 shadow py-4">
           <div className="max-w-7xl mx-auto px-4 flex items-center">
             <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
             <h1 className="text-2xl font-bold text-blue-600">Yourkart</h1>
           </div>
-        </header>
+        </header> */}
 
         {/* Hero Section */}
         <main className="flex-grow flex flex-col items-center justify-center text-center px-4 text-white">
@@ -51,9 +50,9 @@ const Home = () => {
         </main>
 
         {/* Footer */}
-        <footer className="bg-white/90 py-4 text-center text-sm text-gray-700">
+        {/* <footer className="bg-white/90 py-4 text-center text-sm text-gray-700">
           &copy; 2025 Yourkart. All rights reserved.
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

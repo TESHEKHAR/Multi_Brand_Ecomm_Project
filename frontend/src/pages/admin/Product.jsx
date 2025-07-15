@@ -64,8 +64,8 @@ const Product = () => {
         discountPrice: product.discountPrice,
         weight: product.weight,
         status: product.status,
-        brand: product.brand?._id,
-        category: product.category?._id,
+        brand: product.brand?._id || product.brand,
+        category: product.category?._id || product.category,
       });
       setPreviewImage(product.productImage || null);
     } else {
