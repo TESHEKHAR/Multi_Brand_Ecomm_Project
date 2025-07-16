@@ -262,7 +262,7 @@ import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import BrandSelection from "../pages/BrandSelection";
-import BrandProducts from "../pages/BrandProducts";
+// import BrandProducts from "../pages/BrandProducts";
 import AdminDashboard from "../pages/admin/Dashboard";
 import Users from "../pages/admin/Users";
 import AdminLayout from "../layouts/AdminLayout";
@@ -273,6 +273,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Brand from "../pages/admin/Brand";
 import Category from "../pages/admin/Category";
 import ProductDetails from "../pages/ProductDetails";
+import BrandHomePage from "../pages/BrandHomePage";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -320,8 +321,9 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['user']} />}>
           {/* User's primary dashboard */}
           <Route path="/dashboard" element={<BrandSelection />} />
-          <Route path="/brand/:brandName" element={<BrandProducts />} />
+          {/* <Route path="/brand/:brandName" element={<BrandProducts />} /> */}
           <Route path="/product/:productId" element={<ProductDetails />} />
+          <Route path="/brand/:brandName" element={<BrandHomePage />} />
 
         </Route>
 

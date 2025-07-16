@@ -234,6 +234,23 @@ const Product = () => {
         }}
       >
         <Form form={form} layout="vertical" initialValues={{ status: "active" }}>
+        <div className="grid grid-cols-2 gap-4">
+            <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
+              <Select placeholder="Select Brand">
+                {brands?.map((b) => (
+                  <Option key={b._id} value={b._id}>{b.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Category" name="category" rules={[{ required: true }]}>
+              <Select placeholder="Select Category">
+                {categories?.map((c) => (
+                  <Option key={c._id} value={c._id}>{c.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Form.Item
               label="Product Name"
@@ -279,24 +296,6 @@ const Product = () => {
               <Select>
                 <Option value="active">Active</Option>
                 <Option value="inactive">Inactive</Option>
-              </Select>
-            </Form.Item>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
-              <Select placeholder="Select Brand">
-                {brands?.map((b) => (
-                  <Option key={b._id} value={b._id}>{b.name}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item label="Category" name="category" rules={[{ required: true }]}>
-              <Select placeholder="Select Category">
-                {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>{c.name}</Option>
-                ))}
               </Select>
             </Form.Item>
           </div>
