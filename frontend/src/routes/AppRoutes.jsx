@@ -272,6 +272,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Brand from "../pages/admin/Brand";
 import Category from "../pages/admin/Category";
+import SandiaProduct from "../pages/admin/SandiaProduct"
 import ProductDetails from "../pages/ProductDetails";
 import BrandHomePage from "../pages/BrandHomePage";
 
@@ -337,6 +338,7 @@ const AppRoutes = () => {
           <Route path="/admin/products" element={<AdminLayout><Product /></AdminLayout>} />
           <Route path="/admin/brand" element={<AdminLayout><Brand /></AdminLayout>} />
           <Route path="/admin/category" element={<AdminLayout><Category /></AdminLayout>} />
+          <Route path="/admin/sandia-product" element={<AdminLayout><SandiaProduct /></AdminLayout>} />
         </Route>
       </Routes>
     </BrowserRouter>

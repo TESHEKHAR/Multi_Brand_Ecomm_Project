@@ -56,6 +56,15 @@ const Sidebar = () => {
           <FaBox />
           Products
         </NavLink>
+        <NavLink
+          to="/admin/sandia-product"
+          className={({ isActive }) =>
+            `${linkClass} ${isActive ? activeClass : 'text-gray-300'}`
+          }
+        >
+          <FaBox />
+          Sandia Products
+        </NavLink>
 
         <NavLink
           to="/admin/users"
