@@ -1,60 +1,115 @@
 import React, { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../components/Header";
-import { getProductDetails } from "../redux/product/productSlice";
+import { getProductBySlug } from "../redux/product/productSlice";
+import BrandHeader from "../components/BrandHeader";
+import { addToCart } from "../redux/cart/cartSlice";
+
 
 const ProductDetails = () => {
-  const { productId } = useParams();
-  const location = useLocation();
+  const { slug } = useParams();
   const dispatch = useDispatch();
 
-  const productFromState = location.state?.product;
-  const { productDetails, loading, error } = useSelector((state) => state.product);
+  const { singleProduct, loading, error } = useSelector((state) => state.product);
 
   useEffect(() => {
-    if (!productFromState && productId) {
-      dispatch(getProductDetails(productId));
+    if (slug) {
+      dispatch(getProductBySlug(slug));
     }
-  }, [dispatch, productId, productFromState]);
+  }, [slug, dispatch]);
 
-  const product = productFromState || productDetails;
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        productId: singleProduct._id,
+        name: singleProduct.name,
+        price: singleProduct.discountPrice || singleProduct.listPrice,
+        quantity: 1,
+        image: singleProduct.productImage,
+        brand: singleProduct.brand, 
+      })
+    );
+  };
+  
 
-  if (loading) return <p className="text-center mt-10">Loading product...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
-  if (!product) return <p className="text-center mt-10 text-gray-500">Product not found.</p>;
+  if (loading) {
+    return <p className="text-center text-lg mt-10">Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500 mt-10">{error}</p>;
+  }
+
+  if (!singleProduct) {
+    return <p className="text-center text-gray-500 mt-10">Product not found.</p>;
+  }
+
+  const {
+    name,
+    description,
+    productImage,
+    listPrice,
+    discountPrice,
+    stock,
+    weight,
+    sku,
+    ratings,
+    reviews,
+    brand,
+  } = singleProduct;
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      {/* ✅ Brand Header */}
+      <div className="relative z-10">
+        <BrandHeader logo={brand?.brandImage} brandName={brand?.name} />
+      </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        {/* Product Image Top */}
-        <div className="mb-10">
-          <img
-            src={product.productImage}
-            alt={product.name}
-            className="w-full max-h-[500px] object-contain bg-gray-50 border rounded-xl shadow"
-          />
-        </div>
+      {/* Product Content */}
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <div className="grid md:grid-cols-2 gap-10">
+          {/* Product Image */}
+          <div className="bg-white shadow rounded-lg overflow-hidden">
+            <img
+              src={productImage}
+              alt={name}
+              className="w-full h-[400px] object-contain p-6 bg-gray-100"
+            />
+          </div>
 
-        {/* Product Info */}
-        <div className="bg-blue-50 p-6 rounded-xl shadow-sm">
-          <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-4">{product.name}</h1>
+          {/* Product Info */}
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">{name}</h1>
+            <p className="text-sm text-gray-500 mb-4">{description}</p>
 
-          {product.description && (
-            <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
-          )}
+            <div className="flex items-center gap-4 mb-4">
+              <p className="text-2xl font-bold text-blue-700">₹{Number(listPrice).toLocaleString()}</p>
+              {discountPrice && (
+                <p className="text-sm text-gray-400 line-through">
+                  ₹{Number(discountPrice).toLocaleString()}
+                </p>
+              )}
+            </div>
 
-          <div className="flex items-center gap-4 mb-6">
-            <p className="text-2xl font-bold text-green-700">
-              ${Number(product.listPrice).toFixed(2)}
-            </p>
-            {product.discountPrice && (
-              <p className="text-gray-400 line-through text-lg">
-                ${Number(product.discountPrice).toFixed(2)}
+            <p className="text-sm mb-2"><strong>SKU:</strong> {sku}</p>
+            <p className="text-sm mb-2"><strong>Weight:</strong> {weight} kg</p>
+            <p className="text-sm mb-2"><strong>Stock:</strong> {stock > 0 ? stock : "Out of stock"}</p>
+
+            <div className="mt-4">
+              <p className="text-sm text-gray-600">
+                <strong>Ratings:</strong> {ratings}/5 | <strong>Reviews:</strong> {reviews}
               </p>
-            )}
+            </div>
+
+            <button
+              disabled={stock === 0}
+              onClick={handleAddToCart}
+              className={`mt-6 px-6 py-3 text-white rounded ${
+                stock > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
+              } transition`}
+            >
+              {stock > 0 ? "Add to Cart" : "Out of Stock"}
+            </button>
           </div>
         </div>
       </div>

@@ -10,19 +10,34 @@ export const getProducts = createAsyncThunk('product/getProducts', async (_, thu
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error fetching products');
   }
 });
-export const getProductDetails = createAsyncThunk(
-  'product/getProductDetails',
-  async (productId, thunkAPI) => {
+// export const getProductDetails = createAsyncThunk(
+//   'product/getProductDetails',
+//   async (productId, thunkAPI) => {
+//     try {
+//       const res = await axios.get(`/product/${productId}`);
+//       return res.data; // Assuming res.data is the product object
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || 'Error fetching product details'
+//       );
+//     }
+//   }
+// );
+
+export const getProductBySlug = createAsyncThunk(
+  'product/getProductBySlug',
+  async (slug, thunkAPI) => {
     try {
-      const res = await axios.get(`/product/${productId}`);
-      return res.data; // Assuming res.data is the product object
+      const res = await axios.get(`/product/slug/${slug}`);
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || 'Error fetching product details'
+        error.response?.data?.message || 'Error fetching product by slug'
       );
     }
   }
 );
+
 
 export const getProductsByBrand = createAsyncThunk(
   'product/getProductsByBrand',
@@ -124,7 +139,22 @@ const productSlice = createSlice({
       // DELETE
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.products = state.products.filter(p => p._id !== action.payload);
+      })
+      .addCase(getProductBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.singleProduct = null;
+      })
+      .addCase(getProductBySlug.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleProduct = action.payload;
+      })
+      .addCase(getProductBySlug.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.singleProduct = null;
       });
+      
   },
 });
 

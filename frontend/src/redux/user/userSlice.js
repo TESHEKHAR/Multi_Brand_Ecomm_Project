@@ -35,11 +35,25 @@ export const setPassword = createAsyncThunk(
     }
   }
 );
+export const getSingleApprovedUser = createAsyncThunk(
+  'user/getSingleApprovedUser',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/user/${userId}`);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to get approved user');
+    }
+  }
+);
 
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
+    singleUser: null,
+    singleUserLoading: false,
+    singleUserError: null,
     users: [],
     loading: false,
     error: null,
@@ -76,7 +90,19 @@ const userSlice = createSlice({
         state.setPasswordLoading = false;
         state.setPasswordSuccess = false;
         state.error = action.payload;
-      });      
+      })
+      .addCase(getSingleApprovedUser.pending, (state) => {
+        state.singleUserLoading = true;
+        state.singleUserError = null;
+      })
+      .addCase(getSingleApprovedUser.fulfilled, (state, action) => {
+        state.singleUserLoading = false; 
+        state.singleUser = action.payload;
+      })
+      .addCase(getSingleApprovedUser.rejected, (state, action) => {
+        state.singleUserLoading = false;
+        state.singleUserError = action.payload;
+      });            
   },
 });
 

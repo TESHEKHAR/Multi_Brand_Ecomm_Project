@@ -3,6 +3,7 @@ import {
     approvalUserAndSendLink,
     forgotPassword,
     getAllUsers,
+    getSingleApprovedUser,
     loginUser,
     logoutUser,
     registerUser,
@@ -21,5 +22,7 @@ router.post('/forgot-password',forgotPassword);
 router.post('/reset-password',resetPassword);
 router.post('/logout',verifyToken,logoutUser);
 router.get('/user',getAllUsers);
+router.get('/user/:userId', getSingleApprovedUser);
+
 
 export default router;

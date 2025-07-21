@@ -4,6 +4,7 @@ import {
   createProduct,
   deleteProduct,
   getProductById,
+  getProductBySlug,
   getProducts,
   updateProduct
 } from '../controllers/productController.js';
@@ -19,6 +20,8 @@ router.get('/product/:id', getProductById);
 router.put('/product/:id', upload.single('productImage'), updateProduct);
 
 router.delete('/product/:id', deleteProduct);
+
+router.get('/product/slug/:slug', getProductBySlug); // ✅ safer route
 
 // routes/productRoutes.js
 

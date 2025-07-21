@@ -275,6 +275,7 @@ import Category from "../pages/admin/Category";
 import SandiaProduct from "../pages/admin/SandiaProduct"
 import ProductDetails from "../pages/ProductDetails";
 import BrandHomePage from "../pages/BrandHomePage";
+import Cart from "../components/Cart";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -323,8 +324,10 @@ const AppRoutes = () => {
           {/* User's primary dashboard */}
           <Route path="/dashboard" element={<BrandSelection />} />
           {/* <Route path="/brand/:brandName" element={<BrandProducts />} /> */}
-          <Route path="/product/:productId" element={<ProductDetails />} />
+          {/* <Route path="/product/:productId" element={<ProductDetails />} /> */}
+          <Route path="/product/:slug" element={<ProductDetails />} />
           <Route path="/brand/:brandName" element={<BrandHomePage />} />
+          <Route path="/cart" element={<Cart />} />
 
         </Route>
 

@@ -448,6 +448,26 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+export const getSingleApprovedUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findOne({ _id: userId, isApproved: true }).select(
+      '-password -refreshToken -resetToken -tokenExpires'
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'Approved user not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Get Single Approved User Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
   
 
 

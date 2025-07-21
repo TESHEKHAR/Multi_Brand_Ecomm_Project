@@ -77,17 +77,16 @@ const ProductCard = () => {
                     </p>
                   )}
                 </div>
-
-                {/* <Link
-                  to={`/product/${product._id}`}
-                  state={{ product }}
-                  className="inline-block mt-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition"
-                >
+                {/* <Link className="inline-block mt-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">
                   View Details
                 </Link> */}
-                <Link className="inline-block mt-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">
-                  View Details
-                </Link>
+                <Link
+  to={`/product/${product.slug}`}
+  className="inline-block mt-2 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition"
+>
+  View Details
+</Link>
+
               </div>
             </div>
           ))}
