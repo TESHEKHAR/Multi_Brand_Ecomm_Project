@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../redux/cart/cartSlice";
 import { getSingleApprovedUser } from "../redux/user/userSlice";
+import { placeOrder } from "../redux/order/orderSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { cartItems } = useSelector((state) => state.cart);
   const { singleUser, singleUserLoading } = useSelector((state) => state.user);
@@ -19,6 +23,7 @@ const Cart = () => {
     phone: "",
     address: "",
     pinCode: "",
+    paymentMethod: "CashOnDelivery",
   });
 
   useEffect(() => {
@@ -58,8 +63,38 @@ const Cart = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Checkout data submitted:", checkoutForm);
-    // Call your checkout API here
+  
+    if (cartItems.length === 0) {
+      alert("Cart is empty!");
+      return;
+    }
+  
+    dispatch(
+      placeOrder({
+        userId,
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          quantity: item.quantity,
+          brand: item.brand?._id || null,
+        })),
+        shippingAddress: checkoutForm,
+        paymentMethod: "Cash on Delivery",
+        totalAmount,
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        toast.success("Order placed successfully!");
+      dispatch({ type: "cart/clearCart" });
+      navigate("/");
+      })
+      .catch((err) => {
+        alert("Failed to place order: " + err);
+        toast.error("Failed to place order!");
+      });
   };
 
   const totalAmount = cartItems.reduce(
@@ -173,6 +208,18 @@ const Cart = () => {
                 required
               />
             </div>
+            <select
+  name="paymentMethod"
+  value={checkoutForm.paymentMethod}
+  onChange={handleInputChange}
+  className="w-full border px-3 py-2 rounded mt-1"
+  required
+>
+  <option value="CashOnDelivery">Cash on Delivery</option>
+  <option value="Online">Online</option>
+</select>
+
+
 
             <button
               type="submit"

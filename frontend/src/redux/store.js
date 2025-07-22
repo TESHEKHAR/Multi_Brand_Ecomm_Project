@@ -6,6 +6,7 @@ import productReducer from "./product/productSlice";
 import categoryReducer from "./category/categorySlice";
 import SandiaProductReducer from "./sandiaProduct/sandiaproductSlice";
 import cartReducer from "./cart/cartSlice";
+import orderReducer from './order/orderSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     category: categoryReducer,
     SandiaProduct: SandiaProductReducer,
     cart: cartReducer,
+    order: orderReducer,
   },
 });

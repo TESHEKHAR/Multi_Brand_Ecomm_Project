@@ -276,6 +276,7 @@ import SandiaProduct from "../pages/admin/SandiaProduct"
 import ProductDetails from "../pages/ProductDetails";
 import BrandHomePage from "../pages/BrandHomePage";
 import Cart from "../components/Cart";
+import Orders from "../pages/admin/Orders";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -341,7 +342,8 @@ const AppRoutes = () => {
           <Route path="/admin/products" element={<AdminLayout><Product /></AdminLayout>} />
           <Route path="/admin/brand" element={<AdminLayout><Brand /></AdminLayout>} />
           <Route path="/admin/category" element={<AdminLayout><Category /></AdminLayout>} />
-          <Route path="/admin/sandia-product" element={<AdminLayout><SandiaProduct /></AdminLayout>} />
+          {/* <Route path="/admin/sandia-product" element={<AdminLayout><SandiaProduct /></AdminLayout>} /> */}
+          <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
         </Route>
       </Routes>
     </BrowserRouter>

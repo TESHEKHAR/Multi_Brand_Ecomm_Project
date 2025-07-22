@@ -8,7 +8,7 @@ import categoryRoutes from './routes/categoryRoute.js';
 import brandRoute from './routes/brandRoute.js';
 import subCategoryRoute from './routes/subCategoryRoute.js';
 import sandiaRoutes from './routes/sandiaRoutes.js';
-
+import orderRoutes from './routes/orderRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -31,6 +31,7 @@ app.use('/api', categoryRoutes);
 app.use('/api',brandRoute);
 app.use('/api',subCategoryRoute);
 app.use('/api',sandiaRoutes);
+app.use('/api',orderRoutes);
 
 
 const PORT = process.env.PORT || 5000;
