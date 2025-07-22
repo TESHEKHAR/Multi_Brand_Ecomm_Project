@@ -208,7 +208,7 @@ const BrandHeader = ({ logo, brandName }) => {
             >
               {item.label}
               {item.label === "Cart" && cartItems?.length > 0 && (
-                <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-5 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {cartItems.length}
                 </span>
               )}
