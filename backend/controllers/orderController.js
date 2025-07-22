@@ -9,8 +9,8 @@ export const placeOrder = async (req, res) => {
     const { items, shippingAddress, totalAmount, paymentMethod } = req.body;
     const userId = req.user?.id || req.body.userId;
 
-    console.log("🧑 User ID:", userId);
-    console.log("➡️ Received order body:", req.body);
+    // console.log("🧑 User ID:", userId);
+    // console.log("➡️ Received order body:", req.body);
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid user ID" });
@@ -41,7 +41,7 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({ message: "User email not found" });
     }
 
-    console.log("📨 Sending confirmation to:", user.email);
+    // console.log("📨 Sending confirmation to:", user.email);
 
     await sendEmail(
         user.email,
@@ -68,7 +68,7 @@ export const placeOrder = async (req, res) => {
         `<p>New order by: <strong>${shippingAddress?.name || user.name}</strong><br/>Email: ${user.email}</p>`
       );
 
-    console.log("📧 Admin notified about the order");
+    // console.log("📧 Admin notified about the order");
 
     res.status(201).json({
       message: "Order placed successfully",
