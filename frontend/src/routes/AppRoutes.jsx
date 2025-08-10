@@ -272,7 +272,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Brand from "../pages/admin/Brand";
 import Category from "../pages/admin/Category";
-import SandiaProduct from "../pages/admin/SandiaProduct"
+// import SandiaProduct from "../pages/admin/SandiaProduct"
 import ProductDetails from "../pages/ProductDetails";
 import BrandHomePage from "../pages/BrandHomePage";
 import Cart from "../components/Cart";
