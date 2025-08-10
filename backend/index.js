@@ -25,6 +25,12 @@ app.use(
 )
 app.use(cors());
 
+// Test route for Hello World
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});
+
+
 app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', categoryRoutes);
