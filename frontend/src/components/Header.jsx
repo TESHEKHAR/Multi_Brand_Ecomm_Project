@@ -26,7 +26,7 @@ const Header = () => {
       {/* Left - Logo */}
       <div className="flex items-center space-x-2">
         <img src={companyLogo} alt="Logo" className="h-10 w-10 object-contain" />
-        <span className="font-bold text-lg md:text-xl text-blue-700">Yourkart</span>
+        <span className="font-bold text-lg md:text-xl text-blue-700">Allied Purchasing Network</span>
       </div>
 
       {/* Right - Profile Info Like Google */}

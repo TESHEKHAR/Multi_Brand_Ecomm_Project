@@ -63,6 +63,7 @@ const Product = () => {
         listPrice: product.listPrice,
         discountPrice: product.discountPrice,
         weight: product.weight,
+        stock: product.stock,
         status: product.status,
         brand: product.brand?._id || product.brand,
         category: product.category?._id || product.category,
@@ -90,13 +91,13 @@ const Product = () => {
     });
   };
 
-  const handlePriceChange = () => {
-    const listPrice = parseFloat(form.getFieldValue("listPrice"));
-    if (!isNaN(listPrice)) {
-      const discount = +(listPrice - (listPrice * 29.99) / 100).toFixed(2);
-      form.setFieldsValue({ discountPrice: discount });
-    }
-  };
+  // const handlePriceChange = () => {
+  //   const listPrice = parseFloat(form.getFieldValue("listPrice"));
+  //   if (!isNaN(listPrice)) {
+  //     const discount = +(listPrice - (listPrice * 29.99) / 100).toFixed(2);
+  //     form.setFieldsValue({ discountPrice: discount });
+  //   }
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -108,6 +109,7 @@ const Product = () => {
       formData.append("listPrice", parseFloat(values.listPrice));
       formData.append("discountPrice", parseFloat(values.discountPrice));
       formData.append("weight", parseFloat(values.weight));
+      formData.append("stock", parseInt(values.stock));
       formData.append("status", values.status);
       formData.append("brand", values.brand);
       formData.append("category", values.category);
@@ -117,7 +119,9 @@ const Product = () => {
       }
 
       if (editId) {
-        const result = await dispatch(updateProduct({ id: editId, formData })).unwrap();
+        const result = await dispatch(
+          updateProduct({ id: editId, formData })
+        ).unwrap();
         toast.success(`Product "${result.name}" updated successfully`);
       } else {
         const result = await dispatch(createProduct(formData)).unwrap();
@@ -165,7 +169,13 @@ const Product = () => {
       dataIndex: "productImage",
       render: (img) =>
         img ? (
-          <Image src={img} alt="product" width={50} height={50} style={{ objectFit: "cover" }} />
+          <Image
+            src={img}
+            alt="product"
+            width={50}
+            height={50}
+            style={{ objectFit: "cover" }}
+          />
         ) : (
           "N/A"
         ),
@@ -198,7 +208,11 @@ const Product = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Products</h1>
-        <Button type="default" icon={<PlusOutlined />} onClick={() => openModal()}>
+        <Button
+          type="default"
+          icon={<PlusOutlined />}
+          onClick={() => openModal()}
+        >
           Create Product
         </Button>
       </div>
@@ -233,20 +247,32 @@ const Product = () => {
           },
         }}
       >
-        <Form form={form} layout="vertical" initialValues={{ status: "active" }}>
-        <div className="grid grid-cols-2 gap-4">
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{ status: "active" }}
+        >
+          <div className="grid grid-cols-2 gap-4">
             <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
               <Select placeholder="Select Brand">
                 {brands?.map((b) => (
-                  <Option key={b._id} value={b._id}>{b.name}</Option>
+                  <Option key={b._id} value={b._id}>
+                    {b.name}
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
 
-            <Form.Item label="Category" name="category" rules={[{ required: true }]}>
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[{ required: true }]}
+            >
               <Select placeholder="Select Category">
                 {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>{c.name}</Option>
+                  <Option key={c._id} value={c._id}>
+                    {c.name}
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
@@ -257,7 +283,10 @@ const Product = () => {
               name="name"
               rules={[{ required: true, message: "Please enter product name" }]}
             >
-              <Input placeholder="Enter product name" onChange={handleNameChange} />
+              <Input
+                placeholder="Enter product name"
+                onChange={handleNameChange}
+              />
             </Form.Item>
 
             <Form.Item label="Slug" name="slug">
@@ -275,11 +304,19 @@ const Product = () => {
               name="listPrice"
               rules={[{ required: true, message: "Enter list price" }]}
             >
-              <Input type="number" step="0.01" onChange={handlePriceChange} />
+              {/* <Input type="number" step="0.01" onChange={handlePriceChange} /> */}
+              <Input type="number" step="0.01" />
             </Form.Item>
 
-            <Form.Item label="Discount Price ($)" name="discountPrice">
+            {/* <Form.Item label="Discount Price ($)" name="discountPrice">
               <Input type="number" step="0.01" disabled />
+            </Form.Item> */}
+            <Form.Item
+              label="Discount Price ($)"
+              name="discountPrice"
+              rules={[{ required: true, message: "Enter discount price" }]}
+            >
+              <Input type="number" step="0.01" />
             </Form.Item>
           </div>
 
@@ -288,6 +325,13 @@ const Product = () => {
               label="Weight (KG)"
               name="weight"
               rules={[{ required: true, message: "Enter weight" }]}
+            >
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item
+              label="Stock"
+              name="stock"
+              rules={[{ required: true, message: "Enter stock quantity" }]}
             >
               <Input type="number" />
             </Form.Item>

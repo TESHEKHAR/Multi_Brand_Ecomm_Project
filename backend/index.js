@@ -24,13 +24,6 @@ app.use(
     })
 )
 app.use(cors());
-
-// Test route for Hello World
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-
 app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', categoryRoutes);
@@ -41,8 +34,6 @@ app.use('/api',orderRoutes);
 
 
 const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log('Hello World');

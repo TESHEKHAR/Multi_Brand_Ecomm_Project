@@ -27,7 +27,7 @@ const Home = () => {
 
         {/* Hero Section */}
         <main className="flex-grow flex flex-col items-center justify-center text-center px-4 text-white">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Welcome to Yourkart</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Welcome to Allied Purchasing Network</h2>
           <p className="text-lg mb-6 max-w-xl">
           Your one-stop shop for everything — experience seamless online shopping with speed, style, and satisfaction.
           </p>
