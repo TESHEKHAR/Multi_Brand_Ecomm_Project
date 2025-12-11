@@ -69,11 +69,11 @@ const ProductCard = () => {
                 {/* Prices */}
                 <div className="mt-3 mb-2">
                   <p className="text-blue-700 font-bold text-lg">
-                    ₹{Number(product.listPrice).toLocaleString()}
+                    ${Number(product.listPrice).toLocaleString()}
                   </p>
                   {product.discountPrice && (
                     <p className="text-sm text-gray-400 line-through">
-                      ₹{Number(product.discountPrice).toLocaleString()}
+                      ${Number(product.discountPrice).toLocaleString()}
                     </p>
                   )}
                 </div>

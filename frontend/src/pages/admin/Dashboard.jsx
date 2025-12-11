@@ -59,7 +59,7 @@ const Dashboard = () => {
             <div>
               <p className="text-sm text-gray-500">Revenue</p>
               <h3 className="text-lg md:text-xl font-bold text-gray-800">
-                ₹{totalRevenue?.toLocaleString('en-IN') || '0'}
+                ${totalRevenue?.toLocaleString('en-IN') || '0'}
               </h3>
             </div>
           </div>

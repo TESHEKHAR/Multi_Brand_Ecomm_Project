@@ -62,11 +62,11 @@ const Login = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4">
       {/* Background Image */}
-      <img
+      {/* <img
         src={require("../assets/logos/login_register_bck.jpg")}
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover filter blur-sm brightness-75 z-0"
-      />
+      /> */}
 
       {/* Login Form */}
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-10 relative">

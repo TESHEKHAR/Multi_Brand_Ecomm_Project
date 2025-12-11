@@ -176,8 +176,9 @@ const BrandHeader = ({ logo, brandName }) => {
 
   const menuItems = [
     { label: "Home", link: `/brand/${brandName}` },
-    { label: "Products", link: `/brand/${brandName}/products` },
-    { label: "About", link: `/brand/${brandName}/about` },
+    { label: "Brand", link: `/` },
+    // { label: "Products", link: `/brand/${brandName}/products` },
+    // { label: "About", link: `/brand/${brandName}/about` },
     { label: "Cart", link: `/cart` }, // ✅ Cart added here
   ];
 

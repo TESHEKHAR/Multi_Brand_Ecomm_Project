@@ -71,6 +71,13 @@ const productSchema = new mongoose.Schema({
     enum: ['active', 'inactive'],
     default: 'active',
   },
+  weightUnit: { type: String, enum: ["kg", "lbs"], default: "kg" },
+  capacity: { type: String },
+  width: { type: Number },
+  height: { type: Number },
+  dimension: { type: Number },
+
 }, { timestamps: true });
 
 export default mongoose.model('Product', productSchema);
+

@@ -10,12 +10,15 @@ import {
   Select,
   Image,
   Popconfirm,
+  Row,
+  Col,
 } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
   UploadOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -43,11 +46,41 @@ const Product = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [fileList, setFileList] = useState([]);
 
+  // Filters
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getBrands());
     dispatch(getCategories());
   }, [dispatch]);
+
+  // Brand change for filter bar
+  const handleBrandChange = (brandId) => {
+    setSelectedBrand(brandId);
+    setSelectedCategory(null);
+
+    if (brandId) {
+      const filtered = categories.filter(
+        (cat) => cat.brand?._id === brandId || cat.brand === brandId
+      );
+      setFilteredCategories(filtered);
+    } else {
+      setFilteredCategories(categories);
+    }
+  };
+
+  // Brand change inside form (modal)
+  const handleFormBrandChange = (brandId) => {
+    const filtered = categories.filter(
+      (cat) => cat.brand?._id === brandId || cat.brand === brandId
+    );
+    setFilteredCategories(filtered);
+    form.setFieldsValue({ category: null });
+  };
 
   const openModal = (product = null) => {
     form.resetFields();
@@ -56,6 +89,12 @@ const Product = () => {
 
     if (product) {
       setEditId(product._id);
+      const brandId = product.brand?._id || product.brand;
+      const filtered = categories.filter(
+        (cat) => cat.brand?._id === brandId || cat.brand === brandId
+      );
+      setFilteredCategories(filtered);
+
       form.setFieldsValue({
         name: product.name,
         slug: product.slug,
@@ -63,14 +102,20 @@ const Product = () => {
         listPrice: product.listPrice,
         discountPrice: product.discountPrice,
         weight: product.weight,
+        weightUnit: product.weightUnit || "kg",
+        capacity: product.capacity,
+        width: product.width,
+        height: product.height,
+        dimension: product.dimension,
         stock: product.stock,
         status: product.status,
-        brand: product.brand?._id || product.brand,
+        brand: brandId,
         category: product.category?._id || product.category,
       });
       setPreviewImage(product.productImage || null);
     } else {
       setEditId(null);
+      setFilteredCategories([]);
     }
 
     setShowModal(true);
@@ -91,28 +136,13 @@ const Product = () => {
     });
   };
 
-  // const handlePriceChange = () => {
-  //   const listPrice = parseFloat(form.getFieldValue("listPrice"));
-  //   if (!isNaN(listPrice)) {
-  //     const discount = +(listPrice - (listPrice * 29.99) / 100).toFixed(2);
-  //     form.setFieldsValue({ discountPrice: discount });
-  //   }
-  // };
-
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
       const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("slug", values.slug);
-      formData.append("description", values.description);
-      formData.append("listPrice", parseFloat(values.listPrice));
-      formData.append("discountPrice", parseFloat(values.discountPrice));
-      formData.append("weight", parseFloat(values.weight));
-      formData.append("stock", parseInt(values.stock));
-      formData.append("status", values.status);
-      formData.append("brand", values.brand);
-      formData.append("category", values.category);
+      Object.entries(values).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
 
       if (fileList[0]?.originFileObj) {
         formData.append("productImage", fileList[0].originFileObj);
@@ -145,40 +175,41 @@ const Product = () => {
     }
   };
 
+  // Table columns
   const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-    },
-    {
-      title: "Price ($)",
-      dataIndex: "listPrice",
-      render: (p) => `$${p}`,
-    },
+    { title: "Name", dataIndex: "name" },
+    { title: "Price ($)", dataIndex: "listPrice", render: (p) => `$${p}` },
     {
       title: "Discount ($)",
       dataIndex: "discountPrice",
       render: (p) => `$${p}`,
     },
+    // { title: "Weight", render: (r) => `${r.weight} ${r.weightUnit || "kg"}` },
+    // { title: "Capacity", dataIndex: "capacity" },
+    // {
+    //   title: "Size (W×H×D)",
+    //   render: (r) =>
+    //     r.width && r.height && r.dimension
+    //       ? `${r.width}×${r.height}×${r.dimension} cm`
+    //       : "N/A",
+    // },
     {
-      title: "Weight (KG)",
-      dataIndex: "weight",
+      title: "Brand",
+      render: (r) =>
+        typeof r.brand === "object"
+          ? r.brand?.name
+          : brands.find((b) => b._id === r.brand)?.name || "N/A",
+    },
+
+    {
+      title: "Category",
+      render: (r) => r.category?.name || "N/A",
     },
     {
       title: "Image",
       dataIndex: "productImage",
       render: (img) =>
-        img ? (
-          <Image
-            src={img}
-            alt="product"
-            width={50}
-            height={50}
-            style={{ objectFit: "cover" }}
-          />
-        ) : (
-          "N/A"
-        ),
+        img ? <Image src={img} alt="product" width={50} height={50} /> : "N/A",
     },
     {
       title: "Actions",
@@ -193,7 +224,6 @@ const Product = () => {
             onConfirm={() => handleDelete(record._id)}
             okText="Yes"
             cancelText="No"
-            okButtonProps={{ style: { color: "#000" } }}
           >
             <Button icon={<DeleteOutlined />} danger>
               Delete
@@ -204,161 +234,264 @@ const Product = () => {
     },
   ];
 
+  // Filtering logic
+  const filteredProducts = products
+    .filter((p) => {
+      const matchesBrand =
+        !selectedBrand ||
+        p.brand?._id === selectedBrand ||
+        p.brand === selectedBrand;
+      const matchesCategory =
+        !selectedCategory ||
+        p.category?._id === selectedCategory ||
+        p.category === selectedCategory;
+      const matchesSearch =
+        !searchText || p.name.toLowerCase().includes(searchText.toLowerCase());
+      return matchesBrand && matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="flex justify-between items-center mb-4">
+      {/* Filter Bar */}
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
         <h1 className="text-2xl font-semibold">Products</h1>
-        <Button
-          type="default"
-          icon={<PlusOutlined />}
-          onClick={() => openModal()}
-        >
-          Create Product
-        </Button>
+
+        <div className="flex flex-wrap gap-3 items-center">
+          <Select
+            placeholder="Filter by Brand"
+            allowClear
+            style={{ width: 180 }}
+            value={selectedBrand}
+            onChange={handleBrandChange}
+          >
+            {brands?.map((b) => (
+              <Option key={b._id} value={b._id}>
+                {b.name}
+              </Option>
+            ))}
+          </Select>
+
+          <Select
+            placeholder="Filter by Category"
+            allowClear
+            style={{ width: 180 }}
+            value={selectedCategory}
+            onChange={(value) => setSelectedCategory(value)}
+            disabled={!selectedBrand || filteredCategories.length === 0}
+            notFoundContent={
+              !selectedBrand
+                ? "Select brand first"
+                : "No category available for this brand"
+            }
+          >
+            {(filteredCategories.length > 0
+              ? filteredCategories
+              : categories
+            ).map((c) => (
+              <Option key={c._id} value={c._id}>
+                {c.name}
+              </Option>
+            ))}
+          </Select>
+
+          <Input
+            placeholder="Search by product name"
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 220 }}
+            allowClear
+          />
+
+          <Button
+            type="default"
+            icon={<PlusOutlined />}
+            onClick={() => openModal()}
+          >
+            Create Product
+          </Button>
+        </div>
       </div>
 
+      {/* Product Table */}
       <Table
-        dataSource={products}
+        dataSource={filteredProducts}
         columns={columns}
         rowKey="_id"
         loading={loading}
         bordered
       />
 
+      {/* Modal Form */}
       <Modal
         title={editId ? "Edit Product" : "Create Product"}
         open={showModal}
         onCancel={closeModal}
         onOk={handleSubmit}
         okText={editId ? "Update" : "Create"}
-        okButtonProps={{
-          type: "primary",
-          style: {
-            backgroundColor: "#1890ff",
-            borderColor: "#1890ff",
-            color: "#fff",
-          },
-        }}
-        cancelButtonProps={{
-          style: {
-            color: "#000",
-            backgroundColor: "#f5f5f5",
-            borderColor: "#d9d9d9",
-          },
-        }}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{ status: "active" }}
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
-              <Select placeholder="Select Brand">
-                {brands?.map((b) => (
-                  <Option key={b._id} value={b._id}>
-                    {b.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+        <Form layout="vertical" form={form}>
+          <Form.Item
+            name="name"
+            label="Product Name"
+            rules={[{ required: true }]}
+          >
+            <Input
+              onChange={handleNameChange}
+              placeholder="Enter product name"
+            />
+          </Form.Item>
 
-            <Form.Item
-              label="Category"
-              name="category"
-              rules={[{ required: true }]}
-            >
-              <Select placeholder="Select Category">
-                {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>
-                    {c.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              label="Product Name"
-              name="name"
-              rules={[{ required: true, message: "Please enter product name" }]}
-            >
-              <Input
-                placeholder="Enter product name"
-                onChange={handleNameChange}
-              />
-            </Form.Item>
+          <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
+            <Input placeholder="Auto-generated slug" />
+          </Form.Item>
 
-            <Form.Item label="Slug" name="slug">
-              <Input disabled />
-            </Form.Item>
-          </div>
-
-          <Form.Item label="Description" name="description">
+          <Form.Item name="description" label="Description">
             <Input.TextArea rows={3} placeholder="Enter description" />
           </Form.Item>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              label="List Price ($)"
-              name="listPrice"
-              rules={[{ required: true, message: "Enter list price" }]}
-            >
-              {/* <Input type="number" step="0.01" onChange={handlePriceChange} /> */}
-              <Input type="number" step="0.01" />
-            </Form.Item>
+          {/* Price Fields */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="listPrice"
+                label="List Price"
+                rules={[{ required: true }]}
+              >
+                <Input type="number" placeholder="List Price" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="discountPrice"
+                label="Discount Price"
+                rules={[{ required: true }]}
+              >
+                <Input type="number" placeholder="Discount Price" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-            {/* <Form.Item label="Discount Price ($)" name="discountPrice">
-              <Input type="number" step="0.01" disabled />
-            </Form.Item> */}
-            <Form.Item
-              label="Discount Price ($)"
-              name="discountPrice"
-              rules={[{ required: true, message: "Enter discount price" }]}
-            >
-              <Input type="number" step="0.01" />
-            </Form.Item>
-          </div>
+          {/* Weight + Unit */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="weight"
+                label="Weight"
+                rules={[{ required: true }]}
+              >
+                <Input type="number" placeholder="Weight" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="weightUnit" label="Unit" initialValue="kg">
+                <Select>
+                  <Option value="kg">KG</Option>
+                  <Option value="lbs">LBS</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              label="Weight (KG)"
-              name="weight"
-              rules={[{ required: true, message: "Enter weight" }]}
-            >
-              <Input type="number" />
-            </Form.Item>
-            <Form.Item
-              label="Stock"
-              name="stock"
-              rules={[{ required: true, message: "Enter stock quantity" }]}
-            >
-              <Input type="number" />
-            </Form.Item>
+          {/* Dimensions */}
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item name="width" label="Width">
+                <Input type="number" placeholder="Width (cm)" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="height" label="Height">
+                <Input type="number" placeholder="Height (cm)" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="dimension" label="Depth">
+                <Input type="number" placeholder="Depth (cm)" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-            <Form.Item label="Status" name="status">
-              <Select>
-                <Option value="active">Active</Option>
-                <Option value="inactive">Inactive</Option>
-              </Select>
-            </Form.Item>
-          </div>
+          {/* Capacity + Status (same line) */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="capacity" label="Capacity">
+                <Input placeholder="e.g. 5L" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="status" label="Status" initialValue="active">
+                <Select>
+                  <Option value="active">Active</Option>
+                  <Option value="inactive">Inactive</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Stock */}
+          <Form.Item name="stock" label="Stock">
+            <Input type="number" placeholder="Enter stock quantity" />
+          </Form.Item>
+
+          {/* Brand & Category */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="brand"
+                label="Brand"
+                rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="Select Brand"
+                  onChange={handleFormBrandChange}
+                >
+                  {brands?.map((b) => (
+                    <Option key={b._id} value={b._id}>
+                      {b.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="category"
+                label="Category"
+                rules={[{ required: true }]}
+              >
+                <Select
+                  placeholder="Select Category"
+                  disabled={filteredCategories.length === 0}
+                  notFoundContent="No category for this brand"
+                >
+                  {filteredCategories.map((c) => (
+                    <Option key={c._id} value={c._id}>
+                      {c.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Form.Item label="Product Image">
             <Upload
               listType="picture"
-              maxCount={1}
-              beforeUpload={() => false}
               fileList={fileList}
-              onChange={({ fileList: newList }) => setFileList(newList)}
+              beforeUpload={() => false}
+              onChange={({ fileList }) => setFileList(fileList)}
             >
-              <Button icon={<UploadOutlined />}>Upload</Button>
+              <Button icon={<UploadOutlined />}>Upload Image</Button>
             </Upload>
-            {previewImage && fileList.length === 0 && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-600">Current Image:</p>
-                <Image src={previewImage} alt="preview" width={100} />
-              </div>
+            {previewImage && (
+              <Image
+                src={previewImage}
+                alt="Preview"
+                style={{ marginTop: 10 }}
+                width={100}
+              />
             )}
           </Form.Item>
         </Form>

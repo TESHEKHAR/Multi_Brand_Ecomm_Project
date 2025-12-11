@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import companyLogo from '../assets/logos/logo.png';
+// import companyLogo from '../assets/logos/logo.png';
 import { logoutUser } from '../redux/auth/authSlice';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,7 +25,7 @@ const Header = () => {
     <header className="bg-white shadow py-3 px-4 md:px-6 flex justify-between items-center">
       {/* Left - Logo */}
       <div className="flex items-center space-x-2">
-        <img src={companyLogo} alt="Logo" className="h-10 w-10 object-contain" />
+        {/* <img src={companyLogo} alt="Logo" className="h-10 w-10 object-contain" /> */}
         <span className="font-bold text-lg md:text-xl text-blue-700">Allied Purchasing Network</span>
       </div>
 
