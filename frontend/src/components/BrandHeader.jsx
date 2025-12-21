@@ -38,7 +38,7 @@ const BrandHeader = ({ logo }) => {
             <img
               src={logo}
               alt="Brand Logo"
-              className="h-full w-full object-contain"
+              className="h-14 md:h-16 w-auto max-w-[260px] object-contain"
             />
           )}
         </div>

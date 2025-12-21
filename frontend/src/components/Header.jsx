@@ -35,7 +35,7 @@ const Header = () => {
             loop
             muted
             playsInline
-            className="h-full w-full object-contain"
+            className="h-14 md:h-16 w-auto max-w-[260px] object-contain"
           />
         </div>
       </div>
