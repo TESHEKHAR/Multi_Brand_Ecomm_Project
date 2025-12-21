@@ -20,7 +20,7 @@
 //       <Route path="/dashboard" element={<BrandSelection />} />
 //       <Route path="/brand/:brandName" element={<BrandProducts />} />
 //       <Route path="/admin" element={<AdminLayout />} />
-//       <Route path="/set-password" element={<SetPassword />} /> 
+//       <Route path="/set-password" element={<SetPassword />} />
 
 //       <Route
 //         path="/admin/users"
@@ -51,7 +51,6 @@
 // );
 
 // export default AppRoutes;
-
 
 // import React from "react";
 // import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -320,30 +319,82 @@ const AppRoutes = () => {
           }
         />
         <Route path="/set-password" element={<SetPassword />} />
-
-        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
-          {/* User's primary dashboard */}
-          <Route path="/dashboard" element={<BrandSelection />} />
-          {/* <Route path="/brand/:brandName" element={<BrandProducts />} /> */}
-          {/* <Route path="/product/:productId" element={<ProductDetails />} /> */}
-          <Route path="/product/:slug" element={<ProductDetails />} />
+        {/* ye login se chalta hai route   */}
+        {/* <Route element={<ProtectedRoute allowedRoles={['user']} />}> */}
+        {/* User's primary dashboard */}
+        {/* <Route path="/dashboard" element={<BrandSelection />} /> */}
+        {/* <Route path="/brand/:brandName" element={<BrandProducts />} /> */}
+        {/* <Route path="/product/:productId" element={<ProductDetails />} /> */}
+        {/* <Route path="/product/:slug" element={<ProductDetails />} />
           <Route path="/brand/:brandName" element={<BrandHomePage />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart />} /> */}
+        {/* </Route> */}
 
-        </Route>
+        {/* without login ka ab chalega ye sab route */}
+
+        {/* USER PUBLIC ROUTES — LOGIN NOT REQUIRED */}
+        <Route path="/dashboard" element={<BrandSelection />} />
+        <Route path="/product/:slug" element={<ProductDetails />} />
+        <Route path="/brand/:brandName" element={<BrandHomePage />} />
+        <Route path="/cart" element={<Cart />} />
 
         {/* Admin-specific Protected Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           {/* Default /admin path redirects to admin dashboard */}
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route
+            path="/admin"
+            element={<Navigate to="/admin/dashboard" replace />}
+          />
           {/* Admin's primary dashboard */}
-          <Route path="/admin/dashboard" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-          <Route path="/admin/users" element={<AdminLayout><Users /></AdminLayout>} />
-          <Route path="/admin/products" element={<AdminLayout><Product /></AdminLayout>} />
-          <Route path="/admin/brand" element={<AdminLayout><Brand /></AdminLayout>} />
-          <Route path="/admin/category" element={<AdminLayout><Category /></AdminLayout>} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminLayout>
+                <Users />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminLayout>
+                <Product />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/brand"
+            element={
+              <AdminLayout>
+                <Brand />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/category"
+            element={
+              <AdminLayout>
+                <Category />
+              </AdminLayout>
+            }
+          />
           {/* <Route path="/admin/sandia-product" element={<AdminLayout><SandiaProduct /></AdminLayout>} /> */}
-          <Route path="/admin/orders" element={<AdminLayout><Orders /></AdminLayout>} />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminLayout>
+                <Orders />
+              </AdminLayout>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

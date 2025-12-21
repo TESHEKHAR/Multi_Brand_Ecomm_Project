@@ -105,11 +105,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import videoBg from '../assets/videos/allied.mp4'; // Replace with your video path
+import HomePageContent from '../components/HomePageContent';
+import BrandSlider from '../components/BrandSlider';
+import Footer from '../components/Footer';
+import logoVideo from '../assets/videos/allied_logo.mp4';
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
+    <>
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Video */}
       <video
@@ -126,7 +131,21 @@ const Home = () => {
 
       {/* Navbar */}
       <nav className="absolute top-0 left-0 w-full flex items-center justify-between px-8 py-4 z-10 bg-white">
-        <div className="text-black text-2xl font-bold">Allied Purchasing Network</div>
+        {/* <div className="text-black text-2xl font-bold">Allied Purchasing Network</div> */}
+        <div
+  className="cursor-pointer"
+  onClick={() => navigate('/')}
+>
+  <video
+    src={logoVideo}
+    autoPlay
+    loop
+    muted
+    playsInline
+    className="h-14 md:h-16 w-52 md:w-64 object-contain"
+
+  />
+</div>
         <div className="flex gap-4">
           <button
             onClick={() => navigate('/login')}
@@ -143,6 +162,10 @@ const Home = () => {
         </div>
       </nav>
     </div>
+    <HomePageContent />
+    <BrandSlider />
+    <Footer />
+    </>
   );
 };
 

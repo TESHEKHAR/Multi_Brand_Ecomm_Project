@@ -14,8 +14,8 @@ import { verifyToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.post('/brands',verifyToken, upload.single('brandImage'), createBrand);
-router.get('/brands',verifyToken, getBrands);
-router.get('/brands/:id',verifyToken, getBrandById);
+router.get('/brands', getBrands);
+router.get('/brands/:id', getBrandById);
 router.put('/brands/:id', verifyToken, upload.single('brandImage'), updateBrand);
 router.delete('/brands/:id',verifyToken, deleteBrand);
 

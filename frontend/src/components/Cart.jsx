@@ -5,7 +5,8 @@ import { getSingleApprovedUser } from "../redux/user/userSlice";
 import { placeOrder } from "../redux/order/orderSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import BrandHeader from "../components/BrandHeader"; // ✅ Added BrandHeader import
+import BrandHeader from "../components/BrandHeader";
+import Footer from "./Footer";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -24,17 +25,15 @@ const Cart = () => {
     phone: "",
     address: "",
     pinCode: "",
-    paymentMethod: "CashOnDelivery",
+    paymentMethod: "Cash on Delivery",
   });
 
   useEffect(() => {
-    if (userId) {
-      dispatch(getSingleApprovedUser(userId));
-    }
+    if (userId) dispatch(getSingleApprovedUser(userId));
   }, [dispatch, userId]);
 
   useEffect(() => {
-    if (singleUser) {
+    if (singleUser && userId) {
       setCheckoutForm((prev) => ({
         ...prev,
         name: singleUser.name || "",
@@ -45,7 +44,7 @@ const Cart = () => {
         pinCode: singleUser.pinCode || "",
       }));
     }
-  }, [singleUser]);
+  }, [singleUser, userId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,12 +62,18 @@ const Cart = () => {
   };
 
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + (item.price ?? 0) * item.quantity,
     0
   );
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!userId) {
+      toast.info("Please login to place your order.");
+      navigate("/login?redirect=cart");
+      return;
+    }
 
     if (cartItems.length === 0) {
       alert("Cart is empty!");
@@ -97,29 +102,29 @@ const Cart = () => {
         dispatch({ type: "cart/clearCart" });
         navigate("/");
       })
-      .catch((err) => {
-        alert("Failed to place order: " + err);
+      .catch(() => {
         toast.error("Failed to place order!");
       });
   };
 
-  // ✅ Get brand info from the first item in the cart
   const firstBrand = cartItems[0]?.brand;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ✅ Brand Header at top (like ProductDetails) */}
       {firstBrand && (
         <div className="relative z-10">
-          <BrandHeader logo={firstBrand.brandImage} brandName={firstBrand.name} />
+          <BrandHeader
+            logo={firstBrand.brandImage}
+            brandName={firstBrand.name}
+          />
         </div>
       )}
 
-      {/* ✅ Cart + Checkout Layout */}
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Cart Items */}
+        {/* CART ITEMS */}
         <div className="md:col-span-7">
           <h2 className="text-2xl font-bold mb-6">Your Cart</h2>
+
           {cartItems.length === 0 ? (
             <p className="text-gray-500">Your cart is empty.</p>
           ) : (
@@ -134,18 +139,29 @@ const Cart = () => {
                     alt={item.name}
                     className="w-20 h-20 object-contain rounded"
                   />
+
                   <div className="flex-1">
                     <h4 className="font-semibold text-lg">{item.name}</h4>
                     <p className="text-sm text-gray-500">
                       Brand: {item.brand?.name}
                     </p>
+                    {/* <p className="font-medium text-blue-600">
+                      ${(item.price ?? 0).toLocaleString()}
+                    </p> */}
                     <p className="font-medium text-blue-600">
                       ${item.price.toLocaleString()}
                     </p>
+
+                    {item.discountPrice &&
+                      item.price === item.discountPrice && (
+                        <p className="text-sm text-gray-400 line-through">
+                          ${item.listPrice.toLocaleString()}
+                        </p>
+                      )}
+
                     <div className="flex items-center gap-2 mt-2">
-                      <label htmlFor={`qty-${item.productId}`}>Qty:</label>
+                      <label>Qty:</label>
                       <input
-                        id={`qty-${item.productId}`}
                         type="number"
                         min="1"
                         value={item.quantity}
@@ -159,6 +175,7 @@ const Cart = () => {
                       />
                     </div>
                   </div>
+
                   <button
                     onClick={() => handleRemove(item.productId)}
                     className="text-red-500 hover:underline"
@@ -167,44 +184,93 @@ const Cart = () => {
                   </button>
                 </div>
               ))}
+
               <div className="text-right mt-4">
                 <h3 className="text-xl font-semibold text-green-700">
-                  Total: ${totalAmount.toLocaleString()}
+                  Total: ${(totalAmount ?? 0).toLocaleString()}
                 </h3>
               </div>
             </div>
           )}
         </div>
 
-        {/* Checkout Form */}
+        {/* CHECKOUT FORM */}
         <div className="md:col-span-5">
           <h3 className="text-xl font-semibold mb-4">Checkout</h3>
-          {singleUserLoading ? (
-            <p className="text-gray-500">Loading user info...</p>
+
+          {!userId ? (
+            // 🔥 BEAUTIFUL LOGIN CARD
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center">
+              <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                Login Required
+              </h3>
+              <p className="text-gray-600 mb-4">
+                You need to login to continue with checkout.
+              </p>
+
+              <button
+                onClick={() => navigate("/login?redirect=cart")}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+              >
+                Go to Login
+              </button>
+
+              <p className="text-sm text-gray-500 mt-4">
+                Don’t have an account?{" "}
+                <span
+                  onClick={() => navigate("/register")}
+                  className="text-blue-600 cursor-pointer hover:underline"
+                >
+                  Register here
+                </span>
+              </p>
+            </div>
+          ) : singleUserLoading ? (
+            <p>Loading user details...</p>
           ) : (
             <form
               onSubmit={handleSubmit}
               className="space-y-4 bg-white p-6 rounded-lg shadow-lg"
             >
-              {[
-                { label: "Name", name: "name", type: "text", disabled: true },
-                { label: "Email", name: "email", type: "email", disabled: true },
-                { label: "Company", name: "companyName", type: "text", disabled: true },
-                { label: "Phone", name: "phone", type: "tel", disabled: true },
-              ].map((field) => (
-                <div key={field.name}>
-                  <label className="block text-sm font-medium">{field.label}</label>
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={checkoutForm[field.name]}
-                    onChange={handleInputChange}
-                    className="w-full border px-3 py-2 rounded mt-1 bg-gray-100"
-                    disabled={field.disabled}
-                    required
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="block text-sm font-medium">Name</label>
+                <input
+                  type="text"
+                  value={checkoutForm.name}
+                  className="w-full border px-3 py-2 rounded bg-gray-100"
+                  disabled
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Email</label>
+                <input
+                  type="text"
+                  value={checkoutForm.email}
+                  className="w-full border px-3 py-2 rounded bg-gray-100"
+                  disabled
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Company</label>
+                <input
+                  type="text"
+                  value={checkoutForm.companyName}
+                  className="w-full border px-3 py-2 rounded bg-gray-100"
+                  disabled
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Phone</label>
+                <input
+                  type="text"
+                  value={checkoutForm.phone}
+                  className="w-full border px-3 py-2 rounded bg-gray-100"
+                  disabled
+                />
+              </div>
 
               <div>
                 <label className="block text-sm font-medium">Address</label>
@@ -212,7 +278,7 @@ const Cart = () => {
                   name="address"
                   value={checkoutForm.address}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded mt-1"
+                  className="w-full border px-3 py-2 rounded"
                   required
                 />
               </div>
@@ -224,13 +290,15 @@ const Cart = () => {
                   name="pinCode"
                   value={checkoutForm.pinCode}
                   onChange={handleInputChange}
-                  className="w-full border px-3 py-2 rounded mt-1"
+                  className="w-full border px-3 py-2 rounded"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Payment Method</label>
+                <label className="block text-sm font-medium">
+                  Payment Method
+                </label>
                 <select
                   name="paymentMethod"
                   value={checkoutForm.paymentMethod}
@@ -238,14 +306,13 @@ const Cart = () => {
                   className="w-full border px-3 py-2 rounded mt-1"
                   required
                 >
-                  <option value="CashOnDelivery">Cash on Delivery</option>
-                  {/* <option value="Online">Online</option> */}
+                  <option value="Cash on Delivery">Cash on Delivery</option>
                 </select>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded"
               >
                 Place Order
               </button>
@@ -253,6 +320,7 @@ const Cart = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

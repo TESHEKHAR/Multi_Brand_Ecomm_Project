@@ -5,6 +5,7 @@ import { getBrands } from "../redux/brand/brandSlice";
 import BrandHeader from "../components/BrandHeader";
 import BrandBanner from "../components/BrandBanner";
 import ProductCard from "../components/ProductCard";
+import Footer from "../components/Footer";
 
 const BrandHomePage = () => {
   const { brandName } = useParams();
@@ -33,6 +34,7 @@ const BrandHomePage = () => {
       <div className="text-center py-10 px-4 text-gray-600 text-lg">
         <ProductCard /> 
       </div>
+      <Footer />
     </div>
   );
 };

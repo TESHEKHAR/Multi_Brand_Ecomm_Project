@@ -49,7 +49,7 @@ const Orders = () => {
               <div>
                 <p className="font-semibold">{item.name}</p>
                 <p>Qty: {item.quantity}</p>
-                <p>₹{item.price}</p>
+                <p>${item.price}</p>
               </div>
             </div>
           ))}
@@ -60,7 +60,7 @@ const Orders = () => {
       title: "Total",
       dataIndex: "totalAmount",
       key: "totalAmount",
-      render: (total) => <strong>₹{total.toLocaleString()}</strong>,
+      render: (total) => <strong>${total.toLocaleString()}</strong>,
     },
     {
       title: "Payment",

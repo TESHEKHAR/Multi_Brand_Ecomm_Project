@@ -11,8 +11,8 @@ const Sidebar = () => {
   return (
     <aside className="w-64 h-screen bg-gray-900 text-gray-100 p-6 fixed shadow-lg">
       {/* Brand */}
-      <div className="mb-10 text-2xl font-bold tracking-wide text-center text-white">
-        Admin Panel
+      <div className="mb-10 text-xl font-bold tracking-wide text-center text-white">
+        Allied Purchasing 
       </div>
 
       {/* Navigation */}

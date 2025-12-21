@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../components/Header";
 import { getBrands } from "../redux/brand/brandSlice";
+import Footer from "../components/Footer";
 
 const BrandSelection = () => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const BrandSelection = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
