@@ -20,9 +20,9 @@ export const createProduct = async (req, res) => {
       weight,
       weightUnit,
       capacity,
-      width,
-      height,
-      dimension,
+      // width,
+      // height,
+      // dimension,
       stock,
       sku,
       tags,
@@ -61,9 +61,9 @@ export const createProduct = async (req, res) => {
       weight: parseFloat(weight),
       weightUnit: weightUnit || "kg",
       capacity: capacity || null,
-      width: parseFloat(width),
-      height: parseFloat(height),
-      dimension: dimension ? parseFloat(dimension) : null,
+      // width: parseFloat(width),
+      // height: parseFloat(height),
+      // dimension: dimension ? parseFloat(dimension) : null,
       stock: parseInt(stock || 0),
       sku: generatedSku,
       tags: Array.isArray(tags) ? tags : tags ? [tags] : [],
@@ -91,7 +91,8 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
     // const products = await Product.find()
-    const products = await Product.find().sort({ createdAt: -1 })
+    const products = await Product.find()
+      .sort({ createdAt: -1 })
       .populate("category", "name")
       .populate("subCategory", "name");
 
@@ -168,9 +169,9 @@ export const updateProduct = async (req, res) => {
       weight,
       weightUnit,
       capacity,
-      width,
-      height,
-      dimension,
+      // width,
+      // height,
+      // dimension,
       stock,
       sku,
       tags,
@@ -183,7 +184,8 @@ export const updateProduct = async (req, res) => {
     const updatedData = {
       name,
       slug: slug?.trim() || slugify(name || product.name, { lower: true }),
-      brand: brand && mongoose.Types.ObjectId.isValid(brand) ? brand : product.brand,
+      brand:
+        brand && mongoose.Types.ObjectId.isValid(brand) ? brand : product.brand,
       description,
       brandImage,
       category:
@@ -201,16 +203,12 @@ export const updateProduct = async (req, res) => {
       weight: weight ? parseFloat(weight) : product.weight,
       weightUnit: weightUnit || product.weightUnit,
       capacity: capacity || product.capacity || null,
-      width: width ? parseFloat(width) : product.width,
-      height: height ? parseFloat(height) : product.height,
-      dimension: dimension ? parseFloat(dimension) : product.dimension || null,
+      // width: width ? parseFloat(width) : product.width,
+      // height: height ? parseFloat(height) : product.height,
+      // dimension: dimension ? parseFloat(dimension) : product.dimension || null,
       stock: stock ? parseInt(stock) : product.stock,
       sku: sku?.trim() || product.sku || `SKU-${Date.now()}`,
-      tags: Array.isArray(tags)
-        ? tags
-        : tags
-        ? [tags]
-        : product.tags,
+      tags: Array.isArray(tags) ? tags : tags ? [tags] : product.tags,
       isFeatured: isFeatured === "true" || isFeatured === true,
       ratings: ratings ? parseFloat(ratings) : product.ratings,
       reviews: reviews ? parseInt(reviews) : product.reviews,
@@ -223,7 +221,11 @@ export const updateProduct = async (req, res) => {
           `${req.protocol}://${req.get("host")}/uploads/`,
           ""
         );
-        const fullOldImagePath = path.join(process.cwd(), "uploads", oldImagePath);
+        const fullOldImagePath = path.join(
+          process.cwd(),
+          "uploads",
+          oldImagePath
+        );
 
         if (fs.existsSync(fullOldImagePath)) {
           try {

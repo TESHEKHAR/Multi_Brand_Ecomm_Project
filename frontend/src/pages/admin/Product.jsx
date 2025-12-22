@@ -104,9 +104,9 @@ const Product = () => {
         weight: product.weight,
         weightUnit: product.weightUnit || "kg",
         capacity: product.capacity,
-        width: product.width,
-        height: product.height,
-        dimension: product.dimension,
+        // width: product.width,
+        // height: product.height,
+        // dimension: product.dimension,
         stock: product.stock,
         status: product.status,
         brand: brandId,
@@ -395,7 +395,7 @@ const Product = () => {
           </Row>
 
           {/* Dimensions */}
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={8}>
               <Form.Item name="width" label="Width">
                 <Input type="number" placeholder="Width (cm)" />
@@ -411,7 +411,7 @@ const Product = () => {
                 <Input type="number" placeholder="Depth (cm)" />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           {/* Capacity + Status (same line) */}
           <Row gutter={16}>

@@ -73,9 +73,9 @@ const productSchema = new mongoose.Schema({
   },
   weightUnit: { type: String, enum: ["kg", "lbs"], default: "kg" },
   capacity: { type: String },
-  width: { type: Number },
-  height: { type: Number },
-  dimension: { type: Number },
+  // width: { type: Number },
+  // height: { type: Number },
+  // dimension: { type: Number },
 
 }, { timestamps: true });
 
