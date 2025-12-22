@@ -4,6 +4,7 @@ import { loginUser } from "../redux/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { syncCartAfterLogin } from "../redux/cart/cartSlice";
+import BrandHeader from "../components/BrandHeader"; // ✅ navbar added
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -36,55 +37,78 @@ const Login = () => {
 
       if (loginUser.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
-
         dispatch(syncCartAfterLogin());
 
         const redirect = new URLSearchParams(location.search).get("redirect");
-
-        if (redirect) {
-          navigate("/" + redirect);
-        } else {
-          navigate("/");
-        }
+        navigate(redirect ? "/" + redirect : "/");
       } else {
         toast.error(resultAction.payload || "Login failed");
       }
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong");
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-10 relative">
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Login</h2>
+    <>
+      {/* ✅ NAVBAR */}
+      <BrandHeader />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 font-medium">Email *</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border rounded px-4 py-2" />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-          </div>
+      {/* PAGE CONTENT */}
+      <div className="relative min-h-screen flex items-center justify-center px-4 pt-20">
+        {/* pt-20 = navbar height space */}
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-10 relative">
+          <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+            Login
+          </h2>
 
-          <div>
-            <label className="block mb-1 font-medium">Password *</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full border rounded px-4 py-2" />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block mb-1 font-medium">Email *</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full border rounded px-4 py-2"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
+            </div>
 
-          <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded">
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <div>
+              <label className="block mb-1 font-medium">Password *</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border rounded px-4 py-2"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
+              )}
+            </div>
 
-        <p className="mt-4 text-center">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 underline">
-            Register
-          </Link>
-        </p>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-2 rounded"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          <p className="mt-4 text-center">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-blue-600 underline">
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
