@@ -1,17 +1,21 @@
 import express from 'express';
-import upload from '../middleware/upload.js';
+import upload, { uploadCSV } from '../middleware/upload.js';
 import {
   createProduct,
   deleteProduct,
   getProductById,
   getProductBySlug,
   getProducts,
+  importProductsFromCSV,
   updateProduct
 } from '../controllers/productController.js';
 import Product from '../models/Product.js';
 
 const router = express.Router();
 router.post('/create-product', upload.single('productImage'), createProduct);
+// ✅ Import Products from CSV
+
+router.post('/import', uploadCSV.single('file'), importProductsFromCSV);
 
 router.get('/products', getProducts);
 

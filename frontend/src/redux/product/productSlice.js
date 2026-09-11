@@ -1,28 +1,209 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from '../../api/axiosInstance';
+// import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// import axios from '../../api/axiosInstance';
 
-// GET all products
-export const getProducts = createAsyncThunk('product/getProducts', async (_, thunkAPI) => {
-  try {
-    const res = await axios.get('/products');
-    return res.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error fetching products');
-  }
-});
-// export const getProductDetails = createAsyncThunk(
-//   'product/getProductDetails',
-//   async (productId, thunkAPI) => {
+// // GET all products
+// export const getProducts = createAsyncThunk('product/getProducts', async (_, thunkAPI) => {
+//   try {
+//     const res = await axios.get('/products');
+//     return res.data;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error fetching products');
+//   }
+// });
+// // export const getProductDetails = createAsyncThunk(
+// //   'product/getProductDetails',
+// //   async (productId, thunkAPI) => {
+// //     try {
+// //       const res = await axios.get(`/product/${productId}`);
+// //       return res.data; // Assuming res.data is the product object
+// //     } catch (error) {
+// //       return thunkAPI.rejectWithValue(
+// //         error.response?.data?.message || 'Error fetching product details'
+// //       );
+// //     }
+// //   }
+// // );
+
+// export const getProductBySlug = createAsyncThunk(
+//   'product/getProductBySlug',
+//   async (slug, thunkAPI) => {
 //     try {
-//       const res = await axios.get(`/product/${productId}`);
-//       return res.data; // Assuming res.data is the product object
+//       const res = await axios.get(`/product/slug/${slug}`);
+//       return res.data;
 //     } catch (error) {
 //       return thunkAPI.rejectWithValue(
-//         error.response?.data?.message || 'Error fetching product details'
+//         error.response?.data?.message || 'Error fetching product by slug'
 //       );
 //     }
 //   }
 // );
+
+
+// export const getProductsByBrand = createAsyncThunk(
+//   'product/getProductsByBrand',
+//   async (brandName, thunkAPI) => {
+//     try {
+//       const res = await axios.get(`/brand/${brandName}`);
+//       return res.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || 'Error fetching brand products'
+//       );
+//     }
+//   }
+// );
+
+// // CREATE product
+// export const createProduct = createAsyncThunk('product/createProduct', async (formData, thunkAPI) => {
+//   try {
+//     const res = await axios.post('/create-product', formData, {
+//       headers: { 'Content-Type' : 'multipart/form-data' },
+//     });
+//     return res.data.product;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error creating product');
+//   }
+// });
+
+// // UPDATE product
+// export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, formData }, thunkAPI) => {
+//   try {
+//     const res = await axios.put(`/product/${id}`, formData, {
+//       headers: { 'Content-Type' : 'multipart/form-data' }
+//     });
+//     return res.data.product;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error updating product');
+//   }
+// });
+
+// // DELETE product
+// export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id, thunkAPI) => {
+//   try {
+//     await axios.delete(`/product/${id}`);
+//     return id;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error deleting product');
+//   }
+// });
+
+// // IMPORT PRODUCTS FROM CSV
+// export const importProductsCSV = createAsyncThunk(
+//   'product/importProductsCSV',
+//   async (csvFile, thunkAPI) => {
+//     try {
+//       const formData = new FormData();
+
+//       formData.append('file', csvFile);
+
+//       const res = await axios.post('/import', formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       });
+
+//       return res.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data?.message || 'CSV import failed'
+//       );
+//     }
+//   }
+// );
+
+// const productSlice = createSlice({
+//   name: 'product',
+//   initialState: {
+//     products: [],
+//     brandProducts: [],
+//     loading: false,
+//     error: null,
+//   },
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       // GET
+//       .addCase(getProducts.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(getProducts.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.products = action.payload;
+//       })
+//       .addCase(getProducts.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       })
+//        // GET BRAND PRODUCTS
+//        .addCase(getProductsByBrand.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(getProductsByBrand.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.brandProducts = action.payload;
+//       })
+//       .addCase(getProductsByBrand.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       })
+
+//       // CREATE
+//       .addCase(createProduct.fulfilled, (state, action) => {
+//         state.products.push(action.payload);
+//       })
+
+//       // UPDATE
+//       .addCase(updateProduct.fulfilled, (state, action) => {
+//         const index = state.products.findIndex(p => p._id === action.payload._id);
+//         if (index !== -1) state.products[index] = action.payload;
+//       })
+
+//       // DELETE
+//       .addCase(deleteProduct.fulfilled, (state, action) => {
+//         state.products = state.products.filter(p => p._id !== action.payload);
+//       })
+//       .addCase(getProductBySlug.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//         state.singleProduct = null;
+//       })
+//       .addCase(getProductBySlug.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.singleProduct = action.payload;
+//       })
+//       .addCase(getProductBySlug.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//         state.singleProduct = null;
+//       });
+      
+//   },
+// });
+
+// export default productSlice.reducer;
+
+
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from '../../api/axiosInstance';
+
+// GET all products
+export const getProducts = createAsyncThunk(
+  'product/getProducts',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axios.get('/products');
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error fetching products'
+      );
+    }
+  }
+);
+
+// commented getProductDetails...
 
 export const getProductBySlug = createAsyncThunk(
   'product/getProductBySlug',
@@ -37,7 +218,6 @@ export const getProductBySlug = createAsyncThunk(
     }
   }
 );
-
 
 export const getProductsByBrand = createAsyncThunk(
   'product/getProductsByBrand',
@@ -54,107 +234,185 @@ export const getProductsByBrand = createAsyncThunk(
 );
 
 // CREATE product
-export const createProduct = createAsyncThunk('product/createProduct', async (formData, thunkAPI) => {
-  try {
-    const res = await axios.post('/create-product', formData, {
-      headers: { 'Content-Type' : 'multipart/form-data' },
-    });
-    return res.data.product;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error creating product');
+export const createProduct = createAsyncThunk(
+  'product/createProduct',
+  async (formData, thunkAPI) => {
+    try {
+      const res = await axios.post('/create-product', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data.product;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error creating product'
+      );
+    }
   }
-});
+);
 
 // UPDATE product
-export const updateProduct = createAsyncThunk('product/updateProduct', async ({ id, formData }, thunkAPI) => {
-  try {
-    const res = await axios.put(`/product/${id}`, formData, {
-      headers: { 'Content-Type' : 'multipart/from-data' }
-    });
-    return res.data.product;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error updating product');
+export const updateProduct = createAsyncThunk(
+  'product/updateProduct',
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      const res = await axios.put(`/product/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data.product;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error updating product'
+      );
+    }
   }
-});
+);
 
 // DELETE product
-export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id, thunkAPI) => {
-  try {
-    await axios.delete(`/product/${id}`);
-    return id;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error deleting product');
+export const deleteProduct = createAsyncThunk(
+  'product/deleteProduct',
+  async (id, thunkAPI) => {
+    try {
+      await axios.delete(`/product/${id}`);
+      return id;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error deleting product'
+      );
+    }
   }
-});
+);
+
+// ==========================================
+// IMPORT PRODUCTS FROM CSV
+// ==========================================
+export const importProductsCSV = createAsyncThunk(
+  'product/importProductsCSV',
+  async (csvFile, thunkAPI) => {
+    try {
+      const formData = new FormData();
+
+      formData.append('file', csvFile);
+
+      const res = await axios.post('/import', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'CSV import failed'
+      );
+    }
+  }
+);
 
 const productSlice = createSlice({
   name: 'product',
+
   initialState: {
     products: [],
     brandProducts: [],
     loading: false,
     error: null,
   },
+
   reducers: {},
+
   extraReducers: (builder) => {
     builder
-      // GET
+
+      // ==========================================
+      // GET PRODUCTS
+      // ==========================================
       .addCase(getProducts.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload;
       })
+
       .addCase(getProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-       // GET BRAND PRODUCTS
-       .addCase(getProductsByBrand.pending, (state) => {
+
+      // ==========================================
+      // GET PRODUCTS BY BRAND
+      // ==========================================
+      .addCase(getProductsByBrand.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+
       .addCase(getProductsByBrand.fulfilled, (state, action) => {
         state.loading = false;
         state.brandProducts = action.payload;
       })
+
       .addCase(getProductsByBrand.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // CREATE
+      // ==========================================
+      // CREATE PRODUCT
+      // ==========================================
       .addCase(createProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
       })
 
-      // UPDATE
+      // ==========================================
+      // UPDATE PRODUCT
+      // ==========================================
       .addCase(updateProduct.fulfilled, (state, action) => {
-        const index = state.products.findIndex(p => p._id === action.payload._id);
-        if (index !== -1) state.products[index] = action.payload;
+        const index = state.products.findIndex(
+          (p) => p._id === action.payload._id
+        );
+
+        if (index !== -1) {
+          state.products[index] = action.payload;
+        }
       })
 
-      // DELETE
+      // ==========================================
+      // DELETE PRODUCT
+      // ==========================================
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.products = state.products.filter(p => p._id !== action.payload);
+        state.products = state.products.filter(
+          (p) => p._id !== action.payload
+        );
       })
+
+      // ==========================================
+      // GET PRODUCT BY SLUG
+      // ==========================================
       .addCase(getProductBySlug.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.singleProduct = null;
       })
+
       .addCase(getProductBySlug.fulfilled, (state, action) => {
         state.loading = false;
         state.singleProduct = action.payload;
       })
+
       .addCase(getProductBySlug.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.singleProduct = null;
       });
-      
   },
 });
 
