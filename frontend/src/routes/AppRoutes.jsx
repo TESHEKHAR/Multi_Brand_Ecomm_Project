@@ -276,6 +276,8 @@ import ProductDetails from "../pages/ProductDetails";
 import BrandHomePage from "../pages/BrandHomePage";
 import Cart from "../components/Cart";
 import Orders from "../pages/admin/Orders";
+import Services from "../pages/Services";
+import FAQ from "../pages/FAQ";
 
 const AppRoutes = () => {
   const { accessToken, user } = useSelector((state) => state.auth);
@@ -318,6 +320,8 @@ const AppRoutes = () => {
             )
           }
         />
+        <Route path="/services" element={<Services />} />
+        <Route path="/faq" element={<FAQ />} />
         <Route path="/set-password" element={<SetPassword />} />
         {/* ye login se chalta hai route   */}
         {/* <Route element={<ProtectedRoute allowedRoles={['user']} />}> */}

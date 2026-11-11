@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,6 +44,7 @@ const ProductDetails = () => {
 
   const {
     name,
+    description,
     productImage,
     listPrice,
     discountPrice,
@@ -57,7 +59,7 @@ const ProductDetails = () => {
       {/* NAVBAR */}
       <BrandHeader />
 
-      {/* HEADING SECTION (NO EXTRA GAP) */}
+      {/* HEADING SECTION */}
       <section className="relative bg-gradient-to-r from-slate-900 to-blue-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-12 md:py-16 text-center relative z-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
@@ -73,36 +75,63 @@ const ProductDetails = () => {
       {/* PRODUCT DETAILS */}
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="grid md:grid-cols-2 gap-10 items-start">
+
+          {/* PRODUCT IMAGE */}
           <img
             src={productImage}
             alt={name}
             className="bg-gray-100 p-6 h-[400px] w-full object-contain rounded shadow"
           />
 
+          {/* PRODUCT INFORMATION */}
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">{name}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              {name}
+            </h2>
 
             {/* PRICE */}
             <div className="flex items-center gap-4 mb-4">
               <p className="text-2xl font-bold text-blue-700">
-                ${Number(isLoggedIn ? discountPrice : listPrice).toLocaleString()}
+                ${Number(
+                  isLoggedIn ? discountPrice : listPrice
+                ).toLocaleString()}
               </p>
-              {isLoggedIn && discountPrice && (
+
+              {isLoggedIn && discountPrice > 0 && (
                 <p className="text-sm text-gray-400 line-through">
                   ${Number(listPrice).toLocaleString()}
                 </p>
               )}
             </div>
 
-            {/* INFO */}
-            <p className="text-sm mb-1"><strong>SKU:</strong> {sku}</p>
-            <p className="text-sm mb-1">
-              <strong>Weight:</strong> {weight} {weightUnit}
-            </p>
-            <p className="text-sm mb-4">
-              <strong>Stock:</strong> {stock > 0 ? stock : "Out of stock"}
-            </p>
+            {/* DESCRIPTION */}
+            <div className="mb-5">
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                Product Description
+              </h3>
 
+              <p className="text-gray-600 text-sm leading-7 whitespace-pre-line">
+                {description || "No description available"}
+              </p>
+            </div>
+
+            {/* INFO */}
+            <div className="border-t border-gray-200 pt-4 mt-4">
+              <p className="text-sm mb-2">
+                <strong>SKU:</strong> {sku}
+              </p>
+
+              <p className="text-sm mb-2">
+                <strong>Weight:</strong> {weight} {weightUnit}
+              </p>
+
+              <p className="text-sm mb-4">
+                <strong>Stock:</strong>{" "}
+                {stock > 0 ? stock : "Out of stock"}
+              </p>
+            </div>
+
+            {/* ADD TO CART */}
             <button
               disabled={stock === 0}
               onClick={handleAddToCart}
@@ -114,6 +143,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
+      {/* FOOTER */}
       <Footer />
     </div>
   );
