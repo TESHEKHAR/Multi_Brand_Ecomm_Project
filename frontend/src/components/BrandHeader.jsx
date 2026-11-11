@@ -106,11 +106,11 @@ const BrandHeader = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled
+      style={{ "--header-height": scrolled ? "75px" : "90px" }}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled
           ? "bg-[#0a1311]/95 backdrop-blur-xl border-b border-[#f2b84b]/20 shadow-lg py-3"
-          : "bg-transparent py-5"
-      }`}
+          : "bg-[#0a1311] py-5"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <div className="flex items-center justify-between">
@@ -140,10 +140,9 @@ const BrandHeader = () => {
                   key={link.name}
                   onClick={() => handleNavigation(link.path)}
                   className={`relative py-2 text-sm font-semibold tracking-wide transition-all duration-300
-                    ${
-                      active
-                        ? "text-[#f2b84b]"
-                        : "text-[#f4ead0] hover:text-[#f2b84b]"
+                    ${active
+                      ? "text-[#f2b84b]"
+                      : "text-[#f4ead0] hover:text-[#f2b84b]"
                     }
                     after:absolute after:left-0 after:bottom-0 after:h-[2px]
                     after:bg-[#f2b84b] after:transition-all after:duration-300
@@ -214,11 +213,10 @@ const BrandHeader = () => {
 
       {/* MOBILE MENU */}
       <div
-        className={`lg:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-500 ${
-          menuOpen
+        className={`lg:hidden absolute top-full left-0 w-full overflow-hidden transition-all duration-500 ${menuOpen
             ? "max-h-[600px] opacity-100 visible"
             : "max-h-0 opacity-0 invisible"
-        }`}
+          }`}
       >
         <div className="bg-[#0a1311] border-t border-[#f2b84b]/20 px-6 py-6 shadow-2xl">
           <nav className="flex flex-col gap-2">
@@ -226,11 +224,10 @@ const BrandHeader = () => {
               <button
                 key={link.name}
                 onClick={() => handleNavigation(link.path)}
-                className={`text-left px-4 py-3 rounded-lg font-semibold transition-all ${
-                  location.pathname === link.path
+                className={`text-left px-4 py-3 rounded-lg font-semibold transition-all ${location.pathname === link.path
                     ? "text-[#f2b84b] bg-[#14211d]"
                     : "text-[#f4ead0] hover:text-[#f2b84b] hover:bg-[#14211d]"
-                }`}
+                  }`}
               >
                 {link.name}
               </button>
